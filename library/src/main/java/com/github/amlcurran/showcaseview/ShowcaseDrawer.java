@@ -29,15 +29,17 @@ public interface ShowcaseDrawer {
     /**
      * Sets the value of the showcase color from themes. What this does is dependent on
      * your implementation of {@link #drawShowcase(Bitmap, float, float, float)}
+     *
      * @param color the color supplied in the theme
      */
     void setShowcaseColour(@ColorInt int color);
 
     /**
      * Draw the showcase. How this is performed is up to you!
-     * @param buffer the bitmap to draw onto
-     * @param x the x position of the point to showcase
-     * @param y the y position of the point to showcase
+     *
+     * @param buffer          the bitmap to draw onto
+     * @param x               the x position of the point to showcase
+     * @param y               the y position of the point to showcase
      * @param scaleMultiplier a scale factor. Currently unused
      */
     void drawShowcase(Bitmap buffer, float x, float y, float scaleMultiplier);
@@ -67,6 +69,7 @@ public interface ShowcaseDrawer {
     /**
      * Remove all drawing on the bitmap. Typically, this would do a color fill of the background
      * color. See {@link StandardShowcaseDrawer} for an example
+     *
      * @param bitmapBuffer the Bitmap to erase drawing from
      */
     void erase(Bitmap bitmapBuffer);
@@ -74,8 +77,14 @@ public interface ShowcaseDrawer {
     /**
      * Draw the commands drawn to the canvas. Typically this is a single implementation, see
      * {@link StandardShowcaseDrawer}.
-     * @param canvas canvas to draw to
+     *
+     * @param canvas       canvas to draw to
      * @param bitmapBuffer bitmap to draw
      */
     void drawToCanvas(Canvas canvas, Bitmap bitmapBuffer);
+
+    /**
+     * @return true if the implementing class uses a rectangular blank space
+     */
+    boolean isRectangularDrawer();
 }

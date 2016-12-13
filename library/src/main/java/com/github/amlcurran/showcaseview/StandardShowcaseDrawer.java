@@ -94,4 +94,9 @@ class StandardShowcaseDrawer implements ShowcaseDrawer {
         canvas.drawBitmap(bitmapBuffer, 0, 0, basicPaint);
     }
 
+    @Override
+    public boolean isRectangularDrawer() {
+        return false;
+    }
+
 }
