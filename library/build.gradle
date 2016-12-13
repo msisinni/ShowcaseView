@@ -46,5 +46,3 @@ android {
         versionName "1.0"
     }
 }
-
-apply from: 'gradle-mvn-push.gradle'
