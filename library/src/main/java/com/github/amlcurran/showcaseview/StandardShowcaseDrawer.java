@@ -46,6 +46,11 @@ class StandardShowcaseDrawer implements ShowcaseDrawer {
     }
 
     @Override
+    public boolean isRectangularDrawer() {
+        return false;
+    }
+
+    @Override
     public void setShowcaseColour(int color) {
         showcaseDrawable.setColorFilter(color, PorterDuff.Mode.MULTIPLY);
     }

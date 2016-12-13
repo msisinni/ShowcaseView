@@ -27,6 +27,11 @@ import android.support.annotation.ColorInt;
 public interface ShowcaseDrawer {
 
     /**
+     * @return true if the implementing class uses a rectangular blank space
+     */
+    boolean isRectangularDrawer();
+
+    /**
      * Sets the value of the showcase color from themes. What this does is dependent on
      * your implementation of {@link #drawShowcase(Bitmap, float, float, float)}
      * @param color the color supplied in the theme

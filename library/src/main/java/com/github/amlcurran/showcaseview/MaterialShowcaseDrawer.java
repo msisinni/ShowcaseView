@@ -25,6 +25,11 @@ public class MaterialShowcaseDrawer implements ShowcaseDrawer {
     }
 
     @Override
+    public boolean isRectangularDrawer() {
+        return false;
+    }
+
+    @Override
     public void setShowcaseColour(int color) {
         // no-op
     }

@@ -33,12 +33,3 @@ task editReadme(type: Copy) {
     }
     into '.'
 }
-
-def getVersionName() {
-    if (project.hasProperty("versionName")) {
-        return project.property("versionName")
-    } else {
-        println("using default version no.")
-        return ""
-    }
-}

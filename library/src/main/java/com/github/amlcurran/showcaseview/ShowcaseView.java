@@ -49,7 +49,7 @@ import static com.github.amlcurran.showcaseview.AnimationFactory.AnimationStartL
  * A view which allows you to showcase areas of your app with an explanation.
  */
 public class ShowcaseView extends RelativeLayout
-        implements View.OnTouchListener, ShowcaseViewApi {
+    implements View.OnTouchListener, ShowcaseViewApi {
 
     private static final int HOLO_BLUE = Color.parseColor("#33B5E5");
     public static final int UNDEFINED = -1;
@@ -113,8 +113,8 @@ public class ShowcaseView extends RelativeLayout
 
         // Get the attributes for the ShowcaseView
         final TypedArray styled = context.getTheme()
-                .obtainStyledAttributes(attrs, R.styleable.ShowcaseView, R.attr.showcaseViewStyle,
-                        R.style.ShowcaseView);
+            .obtainStyledAttributes(attrs, R.styleable.ShowcaseView, R.attr.showcaseViewStyle,
+                R.style.ShowcaseView);
 
         // Set the default animation times
         fadeInMillis = getResources().getInteger(android.R.integer.config_mediumAnimTime);
@@ -217,7 +217,7 @@ public class ShowcaseView extends RelativeLayout
 
     private boolean haveBoundsChanged() {
         return getMeasuredWidth() != bitmapBuffer.getWidth() ||
-                getMeasuredHeight() != bitmapBuffer.getHeight();
+            getMeasuredHeight() != bitmapBuffer.getHeight();
     }
 
     public boolean hasShowcaseView() {
@@ -326,15 +326,15 @@ public class ShowcaseView extends RelativeLayout
 
     private void fadeOutShowcase() {
         animationFactory.fadeOutView(
-                this, fadeOutMillis, new AnimationEndListener() {
-                    @Override
-                    public void onAnimationEnd() {
-                        setVisibility(View.GONE);
-                        clearBitmap();
-                        isShowing = false;
-                        mEventListener.onShowcaseViewDidHide(ShowcaseView.this);
-                    }
+            this, fadeOutMillis, new AnimationEndListener() {
+                @Override
+                public void onAnimationEnd() {
+                    setVisibility(View.GONE);
+                    clearBitmap();
+                    isShowing = false;
+                    mEventListener.onShowcaseViewDidHide(ShowcaseView.this);
                 }
+            }
         );
     }
 
@@ -354,13 +354,13 @@ public class ShowcaseView extends RelativeLayout
 
     private void fadeInShowcase() {
         animationFactory.fadeInView(
-                this, fadeInMillis,
-                new AnimationStartListener() {
-                    @Override
-                    public void onAnimationStart() {
-                        setVisibility(View.VISIBLE);
-                    }
+            this, fadeInMillis,
+            new AnimationStartListener() {
+                @Override
+                public void onAnimationStart() {
+                    setVisibility(View.VISIBLE);
                 }
+            }
         );
     }
 
@@ -371,21 +371,51 @@ public class ShowcaseView extends RelativeLayout
             return true;
         }
 
-        float xDelta = Math.abs(motionEvent.getRawX() - showcaseX);
-        float yDelta = Math.abs(motionEvent.getRawY() - showcaseY);
-        double distanceFromFocus = Math.sqrt(Math.pow(xDelta, 2) + Math.pow(yDelta, 2));
+        float xDelta = motionEvent.getRawX() - showcaseX;
+        float yDelta = motionEvent.getRawY() - showcaseY;
+
+        boolean touchIsOutOfBounds;
+        if (showcaseDrawer.isRectangularDrawer()) {
+            touchIsOutOfBounds = touchIsOutOfRectangularBounds(xDelta, yDelta);
+        } else {
+            touchIsOutOfBounds = isTouchOutOfCircularBounds(xDelta, yDelta);
+        }
 
         if (MotionEvent.ACTION_UP == motionEvent.getAction() &&
-                hideOnTouch && distanceFromFocus > showcaseDrawer.getBlockedRadius()) {
+            hideOnTouch && touchIsOutOfBounds) {
             this.hide();
             return true;
         }
 
-        boolean blocked = blockTouches && distanceFromFocus > showcaseDrawer.getBlockedRadius();
+        boolean blocked = blockTouches && touchIsOutOfBounds;
         if (blocked) {
             mEventListener.onShowcaseViewTouchBlocked(motionEvent);
         }
         return blocked;
+    }
+
+    /**
+     * {@link #showcaseX} and {@link #showcaseY} are the top center coordinates for the view.
+     *
+     * @param xDelta x coord of point touched - x coord of center of view
+     * @param yDelta y coord of point touched - y coord of top of view
+     * @return false if the point touched is between the x coord and the view's width and between the y coord and the view's height
+     */
+    private boolean touchIsOutOfRectangularBounds(float xDelta, float yDelta) {
+        return (Math.abs(xDelta) > showcaseDrawer.getShowcaseWidth() / 2.0) || (yDelta < 0 || yDelta > showcaseDrawer.getShowcaseHeight());
+    }
+
+    /**
+     * {@link #showcaseX} and {@link #showcaseY} are the center coordinates for the view.
+     *
+     * @param xDelta x coord of point touched - x coord of center of view
+     * @param yDelta y coord of point touched - y coord of center of view
+     * @return true if the point touched is outside of the radius extending from the x and y coord
+     */
+    private boolean isTouchOutOfCircularBounds(float xDelta, float yDelta) {
+        double distanceFromFocus = Math.sqrt(Math.pow(xDelta, 2) + Math.pow(yDelta, 2));
+
+        return distanceFromFocus > showcaseDrawer.getBlockedRadius();
     }
 
     private static void insertShowcaseView(ShowcaseView showcaseView, ViewGroup parent, int parentIndex) {
@@ -795,9 +825,9 @@ public class ShowcaseView extends RelativeLayout
         boolean tintButton = styled.getBoolean(R.styleable.ShowcaseView_sv_tintButtonColor, true);
 
         int titleTextAppearance = styled.getResourceId(R.styleable.ShowcaseView_sv_titleTextAppearance,
-                R.style.TextAppearance_ShowcaseView_Title);
+            R.style.TextAppearance_ShowcaseView_Title);
         int detailTextAppearance = styled.getResourceId(R.styleable.ShowcaseView_sv_detailTextAppearance,
-                R.style.TextAppearance_ShowcaseView_Detail);
+            R.style.TextAppearance_ShowcaseView_Detail);
 
         styled.recycle();
 
